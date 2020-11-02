@@ -24,6 +24,9 @@ python3 helper.py run
 python3 helper.py help
 ```
 
+##### Check out the winafl/ directory for more details on winafl itself
+
+
 ### Special thanks:
 
 * Nightmare Fuzzing Project samples finder(https://github.com/joxeankoret/nightmare/blob/master/runtime/find_samples.py)
