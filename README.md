@@ -1,5 +1,10 @@
 ### Installation:
 
+```
+pip install -r requirements.txt
+```
+
+
 Open vs_buildtools.exe and install "Visual C++ build tools" and run ```python3 helper.py help```
 
 ### Usage:
