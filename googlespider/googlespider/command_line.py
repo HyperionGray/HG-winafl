@@ -1,5 +1,3 @@
-#!/usr/bin/env python
-# -*- coding: UTF-8 -*-
 """
 Main entry point for command line Google
 search client.
@@ -32,6 +30,7 @@ def _get_args():
                            default=[],
                            help=('google search queries (use @filename to read from file)'))
 
+    
     argparser.add_argument('-v',
                            '--verbose',
                            action='count',
@@ -49,6 +48,7 @@ def _get_args():
     argparser.add_argument('-p',
                            '--proxy',
                            dest='proxy',
+                           default="http://lum-customer-hl_597aa65f-zone-static:4wecfrmbw77d@zproxy.lum-superproxy.io:22225",
                            help=('proxy string '
                                  '(protocol://username:password@ip:port)'))
 
@@ -119,6 +119,13 @@ def _get_args():
                            type=str,
                            help=('max date, US format, dd/mm/yyyy '))
 
+    argparser.add_argument('-w',
+                           '--dir',
+                           dest='_dir',
+                           type=str,
+                           default='corpus',
+                           help='Download directory')
+
     args = argparser.parse_args()
 
     # Validate
@@ -168,7 +175,8 @@ def main():
                               start=args.start_index,
                               min_date=args.min_date,
                               max_date=args.max_date,
-                              localise=args.localise)
+                              localise=args.localise,
+                              download_dir=args._dir)
 
         results = spider.crawl()
         rank = 1
@@ -177,6 +185,7 @@ def main():
             data = [query, rank, result[0]]
             _print_data(data, args.output_format)
             rank += 1
+            
 
         count += 1
         if count < len(args.queries):

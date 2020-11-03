@@ -1,4 +1,3 @@
-# -*- coding: UTF-8 -*-
 import configparser
 import logging
 import requests
@@ -15,7 +14,7 @@ class GoogleSpider():
                  language='en-US', results_per_page=100,
                  max_results=10, wait_time=30,
                  ignore_https_warnings=False, localise=False,
-                 start=0, min_date=None, max_date=None):
+                 start=0, min_date=None, max_date=None, download_dir=None):
 
         # Load config
         self.config = configparser.ConfigParser()
@@ -35,6 +34,7 @@ class GoogleSpider():
         self.min_date = min_date
         self.max_date = max_date
         self.tbs = []
+        self.download_dir = download_dir
         self.parser = Parser()
 
         # Set default language for localisation
@@ -98,6 +98,7 @@ class GoogleSpider():
                                     headers=self.headers,
                                     proxies=self.proxies,
                                     verify=False)
+
             response.raise_for_status()
             items = self.parser.parse_results(response.text)
 
@@ -142,4 +143,5 @@ class GoogleSpider():
         # Trim to max result size
         results = results[:self.max_results]
 
+        print(results)
         return results

@@ -136,6 +136,9 @@ def build():
 
 def run_afl():
   logging.info("Running afl...")
+  
+
+  
 
 if __name__ == "__main__":
 
