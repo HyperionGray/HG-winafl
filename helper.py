@@ -12,6 +12,8 @@ import requests
 import hashlib
 from urllib.parse import unquote
 from bs4 import BeautifulSoup
+import logging
+logging.basicConfig(filename='helper.log', encoding='utf-8', level=logging.DEBUG)
 
 # max size of file e.g 512 * 512 = 256kb
 MAX_SIZE = 512 * 512
@@ -35,7 +37,10 @@ class CSamplesFinder:
     socket.setdefaulttimeout(30)
     url = "https://www.google.com/search?q=filetype:%s+%s+-facebook.com&num=%s" % (ext, query,count)
     headers = {"User Agent": 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.61 Safari/537.36'}
+    logging.info("going to get URL at {}".format(url))
     r = requests.get(url, headers=headers, timeout=5)
+    r.raise_for_status()
+    logging.info("Got stuff at URL {}".format(url))
     buf = r.text
     soup = BeautifulSoup(buf, features="html.parser")
     for a in soup.findAll("a", href=True):
@@ -46,7 +51,7 @@ class CSamplesFinder:
         pos = href.find("&")
         if pos > -1:
           href = unquote(href[7:pos])
-          log("Downloading %s..." % href)
+          logging.info("Downloading {}...".format(str(href)))
           curCount = curCount + 1
           try:
             file_data = str(requests.get(href, headers=headers, timeout=5).text)
@@ -97,36 +102,44 @@ def test_samples(extention, directory):
 
 def build():
   vswhere_cmd = "vswhere.exe -latest -products * -requires Microsoft.VisualStudio.Component.VC.Tools.x86.x64 -property installationPath"
-  visual_studio = subprocess.check_output(vswhere_cmd,shell=False)
+  visual_studio = subprocess.check_output(vswhere_cmd, shell=False)
   vcvarsalldir = visual_studio.decode('utf-8').rstrip() + "\VC\Auxiliary\Build"
   startingdir = os.getcwd()
+  logging.info("Got starting directory as {}".format(startingdir))
   
   # build 32 bit winafl
   os.chdir(vcvarsalldir)
+  logging.info("Moved to dir {}".format(vcvarsalldir))
+  
   if not os.path.exists(startingdir + "\winafl\\bin32"):
     os.makedirs(startingdir + "\winafl\\bin32")
-  cmd_32 = "cmake -G\"Visual Studio 15 2017\" .. -DDynamoRIO_DIR=" + startingdir + "\winafl\dynamrio\cmake && cmake --build "+ startingdir + "\winafl\\bin32" + " --config Release"
-  print("vcvarsall.bat x86 && cd " + startingdir + "\winafl\\bin32 && " + cmd_32)
-  os.system("vcvarsall.bat x86 && cd /d " + startingdir + "\winafl\\bin32 && " + cmd_32)
+  cmd_32 = "cmake -G\"Visual Studio 16 2019\" .. -DDynamoRIO_DIR=" + "\"" + startingdir + "\winafl\dynamrio\cmake\" && cmake --build "+ "\"" + startingdir + "\winafl\\bin32" + "\"" + " --config Release"
+  logging.info("Getting ready to build with command: {}".format(cmd_32))
+  
+
+
+  print("vcvarsall.bat x86 && cd " + "\"" + startingdir + "\winafl\\bin32 \" && " + cmd_32)
+
+  logging.info("Running command {}".format("vcvarsall.bat x86 && cd " + "\"" + startingdir + "\winafl\\bin32\" && " + cmd_32))
+  os.system("vcvarsall.bat x86 && cd /d " + startingdir + "\winafl\\bin32\" && " + cmd_32)
 
   # build 64 bit winafl
   os.chdir(vcvarsalldir)
   if not os.path.exists(startingdir + "\winafl\\bin64"):
     os.makedirs(startingdir + "\winafl\\bin64")
-  cmd_64 = "cmake -G\"Visual Studio 15 2017 Win64\" .. -DDynamoRIO_DIR=" + startingdir + "\winafl\dynamrio\cmake && cmake --build "+ startingdir + "\winafl\\bin64" + " --config Release"
-  print("vcvarsall.bat x64 && cd " + startingdir + "\winafl\\bin64 && " + cmd_64)
-  os.system("vcvarsall.bat x64 && cd /d" + startingdir + "\winafl\\bin64 && " + cmd_64)
+  cmd_64 = "cmake -G\"Visual Studio 16 2019\" .. -DDynamoRIO_DIR=" + "\"" + startingdir + "\winafl\dynamrio\cmake\" && cmake --build " + "\"" + startingdir + "\winafl\\bin64\"" + " --config Release"
+  print("vcvarsall.bat x64 && cd " + "\"" + startingdir + "\winafl\\bin64\" && " + cmd_64)
+
+  logging.info("Running command {}".format("vcvarsall.bat x64 && cd " + "\"" + startingdir + "\winafl\\bin64\" && " + cmd_64))
+  os.system("vcvarsall.bat x64 && cd /d" + "\"" + startingdir + "\winafl\\bin64\" && " + cmd_64)
   
 
 def run_afl():
   print("Running afl...")
 
 if __name__ == "__main__":
-  fuzzing_file_ext = "xml"
-  search_binary = 0
-  corpus_dir = "corpus"
-  fuzzing_file_signature = "<?xml"
-  result_size = 100
+
+  from config import *
   
   if len(sys.argv) != 2:
     usage()
