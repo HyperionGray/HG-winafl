@@ -110,26 +110,23 @@ def build():
   # build 32 bit winafl
   os.chdir(vcvarsalldir)
   logging.info("Moved to dir {}".format(vcvarsalldir))
-  
   if not os.path.exists(startingdir + "\winafl\\bin32"):
     os.makedirs(startingdir + "\winafl\\bin32")
-  cmd_32 = "cmake -G\"Visual Studio 16 2019\" .. -DDynamoRIO_DIR=" + "\"" + startingdir + "\winafl\dynamrio\cmake\" && cmake --build "+ "\"" + startingdir + "\winafl\\bin32" + "\"" + " --config Release"
+  cmd_32 = "cmake -G\"Visual Studio 15 2017\" .. -DDynamoRIO_DIR=" + "\"" + startingdir + "\winafl\dynamrio\cmake\" && cmake --build "+ "\"" + startingdir + "\winafl\\bin32" + "\"" + " --config Release"
   logging.info("Getting ready to build with command: {}".format(cmd_32))
-  
-
-
   print("vcvarsall.bat x86 && cd " + "\"" + startingdir + "\winafl\\bin32 \" && " + cmd_32)
-
   logging.info("Running command {}".format("vcvarsall.bat x86 && cd " + "\"" + startingdir + "\winafl\\bin32\" && " + cmd_32))
-  os.system("vcvarsall.bat x86 && cd /d " + startingdir + "\winafl\\bin32\" && " + cmd_32)
+  os.system("vcvarsall.bat x86 && cd /d" + "\"" + startingdir + "\winafl\\bin32\" && " + cmd_32)
 
+  
   # build 64 bit winafl
   os.chdir(vcvarsalldir)
+  logging.info("Moved to dir {}".format(vcvarsalldir))
   if not os.path.exists(startingdir + "\winafl\\bin64"):
     os.makedirs(startingdir + "\winafl\\bin64")
-  cmd_64 = "cmake -G\"Visual Studio 16 2019\" .. -DDynamoRIO_DIR=" + "\"" + startingdir + "\winafl\dynamrio\cmake\" && cmake --build " + "\"" + startingdir + "\winafl\\bin64\"" + " --config Release"
+  cmd_64 = "cmake -G\"Visual Studio 15 2017 Win64\" .. -DDynamoRIO_DIR=" + "\"" + startingdir + "\winafl\dynamrio\cmake\" && cmake --build " + "\"" + startingdir + "\winafl\\bin64\"" + " --config Release"
+  logging.info("Getting ready to build with command: {}".format(cmd_64))
   print("vcvarsall.bat x64 && cd " + "\"" + startingdir + "\winafl\\bin64\" && " + cmd_64)
-
   logging.info("Running command {}".format("vcvarsall.bat x64 && cd " + "\"" + startingdir + "\winafl\\bin64\" && " + cmd_64))
   os.system("vcvarsall.bat x64 && cd /d" + "\"" + startingdir + "\winafl\\bin64\" && " + cmd_64)
   
