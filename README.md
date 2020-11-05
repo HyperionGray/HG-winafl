@@ -12,8 +12,8 @@ Open vs_buildtools.exe and install "Visual C++ build tools" and uninstall any ve
 
 then run ```python3 helper.py help```. You should see something like:
 
-```
-vcvarsall.bat x64 && cd "C:\Users\Garrett McParrot\Desktop\fuzzers\hg-winafl\winafl\bin64" && cmake -G"Visual Studio 15 2017 Win64" .. -DDynamoRIO_DIR="C:\Users\Garrett McParrot\Desktop\fuzzers\hg-winafl\winafl\dynamrio\cmake" && cmake --build "C:\Users\Garrett McParrot\Desktop\fuzzers\hg-winafl\winafl\bin64" --config Release
+
+```vcvarsall.bat x64 && cd "C:\Users\Garrett McParrot\Desktop\fuzzers\hg-winafl\winafl\bin64" && cmake -G"Visual Studio 15 2017 Win64" .. -DDynamoRIO_DIR="C:\Users\Garrett McParrot\Desktop\fuzzers\hg-winafl\winafl\dynamrio\cmake" && cmake --build "C:\Users\Garrett McParrot\Desktop\fuzzers\hg-winafl\winafl\bin64" --config Release
 **********************************************************************
 ** Visual Studio 2017 Developer Command Prompt v15.0
 ** Copyright (c) 2017 Microsoft Corporation
@@ -38,14 +38,14 @@ vcvarsall.bat x64 && cd "C:\Users\Garrett McParrot\Desktop\fuzzers\hg-winafl\win
 -- Generating done
 -- Build files have been written to: C:/Users/Garrett McParrot/Desktop/fuzzers/hg-winafl/winafl/bin64
 Microsoft (R) Build Engine version 15.9.21+g9802d43bc3 for .NET Framework
-Copyright (C) Microsoft Corporation. All rights reserved.```
-
+Copyright (C) Microsoft Corporation. All rights reserved.
+```
 If you get an error saying no C compiler found you likely have several version of Visual Studio/Build Tools installed. We don't know why this is happening yet, but the easiest solution is just uninstall everything except for 2017 (feel free to reinstall after).
-
 
 ### Usage:
 
 ##### Build winafl:
+
 ```
 python3 helper.py build
 ```
